@@ -100,22 +100,13 @@ service = build('sheets', 'v4', credentials=creds)
 
 # Call the Sheets API
 sheet = service.spreadsheets()
-# result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-#                             range="datos!A1:G16").execute()
-# values = result.get('values', [])
-
-# Declarar valores a escribir en spreadsheet
-#list_ex = [["a", "b"], [1, 2]]
-
 # Loading headers in sheets
-# wrt_headers = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-#                                     range="Armenia [ARM]!A1", valueInputOption="USER_ENTERED", body={"values": headers}).execute()
-# print(wrt_headers)
-# print(data_armenia)
+wrt_headers = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                    range="Armenia [ARM]!A1", valueInputOption="USER_ENTERED", body={"values": headers}).execute()
 # Loading Armenia to sheet
 wrt_armenia = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range="Armenia [ARM]!A1", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
-wrt_armenia = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range="Armenia [ARM]!A1", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
+                                    range="Armenia [ARM]!A2", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
+# wrt_tanzania = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+#                                      range="Tanzania [TZA]!A2", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
 
 print("done")
