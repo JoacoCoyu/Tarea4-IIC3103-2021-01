@@ -4,13 +4,6 @@ import xml.etree.ElementTree as ET
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-
-def sort_alpha(data):
-    sorted_list = sorted(data)
-    for gho in sorted_list:
-        print(gho)
-
-
 link_armenia = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_ARM.xml"
 link_tanzania = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_TZA.xml"
 link_azerbaiyan = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_AZE.xml"
@@ -58,33 +51,31 @@ jamaica_tree = ET.fromstring(resp_jamaica.content)
 kenia_tree = ET.fromstring(resp_kenia.content)
 
 # Saving data in array of arrays
-data_armenia = []
-data_tanzania = []
-data_azerbaiyan = []
-data_australia = []
-data_jamaica = []
-data_kenia = []
+all_trees = [armenia_tree, tanzania_tree, azerbaiyan_tree,
+             australia_tree, jamaica_tree, kenia_tree]
+data_countries = []
 
-for row in armenia_tree.findall('Fact'):
-    gho = row.find('GHO').text
-    if gho in gho_index:
+for tree in all_trees:
+    for row in tree.findall('Fact'):
+        gho = row.find('GHO').text
+        if gho in gho_index:
 
-        try:
-            country = row.find('COUNTRY').text
-            sex = row.find('SEX').text
-            year = row.find('YEAR').text
-            ghecauses = row.find('GHECAUSES').text
-            agegroup = row.find('AGEGROUP').text
-            display = row.find('Display').text
-            numeric = row.find('Numeric').text
-            low = row.find('Low').text
-            high = row.find('High').text
-            result = [gho, country, sex, year, ghecauses,
-                      agegroup, display, numeric, low, high]
-            data_armenia.append(result)
+            try:
+                country = row.find('COUNTRY').text
+                sex = row.find('SEX').text
+                year = row.find('YEAR').text
+                ghecauses = row.find('GHECAUSES').text
+                agegroup = row.find('AGEGROUP').text
+                display = row.find('Display').text
+                numeric = row.find('Numeric').text
+                low = row.find('Low').text
+                high = row.find('High').text
+                result = [gho, country, sex, year, ghecauses,
+                          agegroup, display, numeric, low, high]
+                data_countries.append(result)
 
-        except:
-            pass
+            except:
+                pass
 
 
 # Carga de datos a spreadsheet
@@ -102,11 +93,9 @@ service = build('sheets', 'v4', credentials=creds)
 sheet = service.spreadsheets()
 # Loading headers in sheets
 wrt_headers = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range="Armenia [ARM]!A1", valueInputOption="USER_ENTERED", body={"values": headers}).execute()
+                                    range="Data!A1", valueInputOption="USER_ENTERED", body={"values": headers}).execute()
 # Loading Armenia to sheet
-wrt_armenia = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                    range="Armenia [ARM]!A2", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
-# wrt_tanzania = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-#                                      range="Tanzania [TZA]!A2", valueInputOption="USER_ENTERED", body={"values": data_armenia}).execute()
+wrt_data = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                 range="Data!A2", valueInputOption="USER_ENTERED", body={"values": data_countries}).execute()
 
 print("done")
