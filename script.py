@@ -4,6 +4,13 @@ import xml.etree.ElementTree as ET
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+
+def sort_alpha(data):
+    sorted_list = sorted(data)
+    for gho in sorted_list:
+        print(gho)
+
+
 link_armenia = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_ARM.xml"
 link_tanzania = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_TZA.xml"
 link_azerbaiyan = "http://tarea-4.2021-1.tallerdeintegracion.cl/gho_AZE.xml"
@@ -55,11 +62,19 @@ all_trees = [armenia_tree, tanzania_tree, azerbaiyan_tree,
              australia_tree, jamaica_tree, kenia_tree]
 data_countries = []
 
+#all_gho = []
+
+# for row in armenia_tree.findall('Fact'):
+#     gho = row.find('GHO').text
+#     if gho not in all_gho:
+#         all_gho.append(gho)
+
+# sort_alpha(all_gho)
+
 for tree in all_trees:
     for row in tree.findall('Fact'):
         gho = row.find('GHO').text
         if gho in gho_index:
-
             try:
                 country = row.find('COUNTRY').text
                 sex = row.find('SEX').text
